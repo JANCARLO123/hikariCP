@@ -1,0 +1,76 @@
+{
+  "Configuration": {
+    "properties": {
+      "property": {
+        "name":"Directory",
+        "value":"${sys:user.home}/log"
+      },
+      "property": { "name": "filename",
+        "value" : "c:/log/app_json.log" }
+    },
+    "Appenders": {
+      "Console": {
+        "PatternLayout": {
+          "pattern": "%highlight{%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n}{FATAL=white, ERROR=red, WARN=blue, INFO=black, DEBUG=green, TRACE=blue}"
+        },
+        "name": "Console",
+        "target": "SYSTEM_OUT"
+      },
+      "RollingFile": {
+        "name": "RollingFile-Appender",
+        "fileName": "c:/log/app-json-rolling.log",
+        "filePattern": "c:/log/$${date:yyyy-MM}/app_xml-%d{MM-dd-yyyy}-%i.log.gz",
+        "PatternLayout": {"pattern": "%d %p %c{1.} [%t] %m%n"},
+        "Policies": {
+          "CronTriggeringPolicy":{"schedule":"0 0 * * * ?"},
+          "SizeBasedTriggeringPolicy": {
+            "size":"1 MB"
+          }
+        },
+        "DefaultRolloverStrategy": {
+          "max":"10"
+        }
+
+      },
+      "File": {
+        "PatternLayout": {
+          "pattern": "%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n"
+        },
+        "name": "File",
+        "fileName": "${filename}"
+      }
+
+    },
+    "Loggers": {
+      "logger": {
+        "name": "com.jcpv.example",
+        "level": "debug",
+        "additivity": "false",
+        "appender-ref": [{
+          "ref": "Console", "level":"info"
+        },
+          {
+            "ref": "File", "level":"error"
+          },
+          {
+            "ref": "RollingFile-Appender", "level":"debug"
+          }]
+      },
+      "Root": {
+        "AppenderRef": [
+          {
+            "ref": "Console"
+          },
+          {
+            "ref": "File"
+          },
+          {
+            "ref": "RollingFile"
+          }
+
+        ],
+        "level": "Info"
+      }
+    }
+  }
+}
